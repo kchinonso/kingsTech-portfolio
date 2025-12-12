@@ -279,6 +279,25 @@
                 padding: 1.5rem;
             }
         }
+        
+        /* Alert Styles */
+        .alert {
+            border-radius: 0.75rem;
+            padding: 1rem 1.5rem;
+            margin-top: 1rem;
+        }
+        
+        .alert-success {
+            background: rgba(16, 185, 129, 0.2);
+            border: 1px solid rgba(16, 185, 129, 0.3);
+            color: #86efac;
+        }
+        
+        .alert-danger {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5;
+        }
     </style>
 </head>
 <body>
@@ -736,13 +755,13 @@
                     
                     <form id="contactForm" class="row g-3">
                         <div class="col-md-6">
-                            <label for="from_name" class="form-label">Your Name *</label>
-                            <input type="text" class="form-control" id="from_name" name="from_name" required 
+                            <label for="user_name" class="form-label">Your Name *</label>
+                            <input type="text" class="form-control" id="user_name" name="user_name" required 
                                    style="background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(255, 255, 255, 0.1); color: white;">
                         </div>
                         <div class="col-md-6">
-                            <label for="from_email" class="form-label">Email Address *</label>
-                            <input type="email" class="form-control" id="from_email" name="from_email" required 
+                            <label for="user_email" class="form-label">Email Address *</label>
+                            <input type="email" class="form-control" id="user_email" name="user_email" required 
                                    style="background: rgba(30, 41, 59, 0.5); border: 1px solid rgba(255, 255, 255, 0.1); color: white;">
                         </div>
                         <div class="col-12">
@@ -788,84 +807,16 @@
     
     <!-- Main JavaScript -->
     <script>
-        // Initialize EmailJS with YOUR credentials
-        (function() {
+        // Initialize EmailJS when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize EmailJS with your Public Key
             emailjs.init({
-                publicKey: "bLxGnUQqM7e6ij8yo",
-                blockHeadless: true,
-                limitRate: {
-                    id: 'portfolio_form',
-                    throttle: 10000, // 10 seconds between emails
-                },
+                publicKey: "bLxGnUQqM7e6ij8yo"
             });
-        })();
-        
-        // Form submission handler
-        document.getElementById('contactForm').addEventListener('submit', function(event) {
-            event.preventDefault();
             
-            // Get form elements
-            const submitBtn = this.querySelector('button[type="submit"]');
-            const submitText = document.getElementById('submitText');
-            const submitSpinner = document.getElementById('submitSpinner');
-            const formMessage = document.getElementById('formMessage');
-            
-            // Show loading state
-            submitText.classList.add('d-none');
-            submitSpinner.classList.remove('d-none');
-            submitBtn.disabled = true;
-            formMessage.classList.add('d-none');
-            
-            // Prepare template parameters
-            const templateParams = {
-                from_name: document.getElementById('from_name').value,
-                from_email: document.getElementById('from_email').value,
-                subject: document.getElementById('subject').value,
-                message: document.getElementById('message').value,
-                to_email: 'kchinonso162@gmail.com',
-                reply_to: document.getElementById('from_email').value,
-                date: new Date().toLocaleDateString()
-            };
-            
-            // Send email using EmailJS
-            emailjs.send('service_ciaii8q', 'template_ycuis6b', templateParams)
-                .then((response) => {
-                    console.log('SUCCESS!', response.status, response.text);
-                    
-                    // Show success message
-                    formMessage.className = 'alert alert-success';
-                    formMessage.innerHTML = `
-                        <i class="fas fa-check-circle me-2"></i>
-                        <strong>Message sent successfully!</strong> I've received your email at kchinonso162@gmail.com and will reply soon.
-                    `;
-                    formMessage.classList.remove('d-none');
-                    
-                    // Reset form
-                    document.getElementById('contactForm').reset();
-                    
-                }, (error) => {
-                    console.log('FAILED...', error);
-                    
-                    // Show error message
-                    formMessage.className = 'alert alert-danger';
-                    formMessage.innerHTML = `
-                        <i class="fas fa-exclamation-circle me-2"></i>
-                        <strong>Failed to send message.</strong> Please email me directly at kchinonso162@gmail.com or try again later.
-                        <br><small>Error: ${error.text || 'Unknown error'}</small>
-                    `;
-                    formMessage.classList.remove('d-none');
-                    
-                }).finally(() => {
-                    // Reset button state
-                    submitText.classList.remove('d-none');
-                    submitSpinner.classList.add('d-none');
-                    submitBtn.disabled = false;
-                    
-                    // Scroll to message
-                    formMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-                });
+            console.log('EmailJS initialized');
         });
-        
+
         // Scroll animations
         const fadeElements = document.querySelectorAll('.fade-in');
         
@@ -933,7 +884,97 @@
                 }
             });
         });
-        
+
+        // Form submission handler
+        const contactForm = document.getElementById('contactForm');
+        if (contactForm) {
+            contactForm.addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                console.log('Form submitted');
+                
+                // Get form elements
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const submitText = document.getElementById('submitText');
+                const submitSpinner = document.getElementById('submitSpinner');
+                const formMessage = document.getElementById('formMessage');
+                
+                // Validate form
+                const userName = document.getElementById('user_name').value.trim();
+                const userEmail = document.getElementById('user_email').value.trim();
+                const subject = document.getElementById('subject').value.trim();
+                const message = document.getElementById('message').value.trim();
+                
+                if (!userName || !userEmail || !subject || !message) {
+                    formMessage.className = 'alert alert-danger';
+                    formMessage.innerHTML = '<i class="fas fa-exclamation-circle me-2"></i>Please fill in all required fields.';
+                    formMessage.classList.remove('d-none');
+                    return;
+                }
+                
+                // Show loading state
+                submitText.classList.add('d-none');
+                submitSpinner.classList.remove('d-none');
+                submitBtn.disabled = true;
+                formMessage.classList.add('d-none');
+                
+                // Prepare template parameters
+                const templateParams = {
+                    from_name: userName,
+                    user_name: userName,
+                    from_email: userEmail,
+                    user_email: userEmail,
+                    subject: subject,
+                    message: message,
+                    to_email: 'kchinonso162@gmail.com',
+                    reply_to: userEmail,
+                    date: new Date().toLocaleString()
+                };
+                
+                console.log('Sending email with params:', templateParams);
+                
+                // Send email using EmailJS
+                emailjs.send('service_ciaii8q', 'template_ycuis6b', templateParams)
+                    .then((response) => {
+                        console.log('SUCCESS!', response.status, response.text);
+                        
+                        // Show success message
+                        formMessage.className = 'alert alert-success';
+                        formMessage.innerHTML = `
+                            <i class="fas fa-check-circle me-2"></i>
+                            <strong>Message sent successfully!</strong> I've received your email at kchinonso162@gmail.com and will reply soon.
+                        `;
+                        formMessage.classList.remove('d-none');
+                        
+                        // Reset form
+                        document.getElementById('contactForm').reset();
+                        
+                    }, (error) => {
+                        console.log('FAILED...', error);
+                        
+                        // Show error message
+                        formMessage.className = 'alert alert-danger';
+                        formMessage.innerHTML = `
+                            <i class="fas fa-exclamation-circle me-2"></i>
+                            <strong>Failed to send message.</strong> Please email me directly at kchinonso162@gmail.com or try again later.
+                            <br><small>Error: ${error.text || 'Unknown error'}</small>
+                        `;
+                        formMessage.classList.remove('d-none');
+                        
+                    }).finally(() => {
+                        // Reset button state
+                        submitText.classList.remove('d-none');
+                        submitSpinner.classList.add('d-none');
+                        submitBtn.disabled = false;
+                        
+                        // Scroll to message
+                        formMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                    });
+            });
+        } else {
+            console.error('Contact form not found!');
+        }
+
         // Form validation styling
         const formInputs = document.querySelectorAll('#contactForm input, #contactForm textarea');
         formInputs.forEach(input => {
@@ -944,7 +985,14 @@
                     this.classList.remove('is-invalid');
                 }
             });
+            
+            input.addEventListener('input', function() {
+                this.classList.remove('is-invalid');
+            });
         });
+
+        // Test button functionality
+        console.log('All JavaScript loaded');
     </script>
 </body>
 </html>
