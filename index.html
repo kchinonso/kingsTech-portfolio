@@ -186,49 +186,60 @@
             color: var(--text-light);
         }
         
-        /* Project Cards with Interactive 3D Effect */
-        .project-card {
-            perspective: 1000px;
-            height: 350px;
-        }
-        
-        .project-inner {
+        /* NEW Project Card Design with Slide-Up Reveal */
+        .project-card-new {
             position: relative;
-            width: 100%;
-            height: 100%;
-            transform-style: preserve-3d;
-            transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             border-radius: 1.5rem;
             overflow: hidden;
+            transition: transform 0.3s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
         
-        .project-card:hover .project-inner {
-            transform: rotateY(180deg);
+        .project-card-new:hover {
+            transform: translateY(-10px);
         }
         
-        .project-front, .project-back {
+        .project-header {
             position: absolute;
             width: 100%;
             height: 100%;
-            backface-visibility: hidden;
-            border-radius: 1.5rem;
             padding: 2rem;
-        }
-        
-        .project-front {
-            background: linear-gradient(135deg, var(--dark-card), #2d3748);
             display: flex;
             flex-direction: column;
             justify-content: flex-end;
+            z-index: 2;
+            transition: transform 0.5s ease;
+            border-radius: 1.5rem;
+            background: linear-gradient(135deg, var(--dark-card), #2d3748);
         }
         
-        .project-back {
+        .project-card-new:hover .project-header {
+            transform: translateY(-70%);
+        }
+        
+        .project-features {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 70%;
             background: linear-gradient(135deg, #1e293b, #0f172a);
-            transform: rotateY(180deg);
+            padding: 2rem;
+            transform: translateY(100%);
+            transition: transform 0.5s ease;
+            border-radius: 1.5rem;
+            z-index: 1;
+            overflow-y: auto;
+        }
+        
+        .project-card-new:hover .project-features {
+            transform: translateY(0);
+        }
+        
+        .features-content {
+            height: 100%;
             display: flex;
             flex-direction: column;
-            justify-content: center;
-            overflow-y: auto;
         }
         
         .project-number {
@@ -240,6 +251,28 @@
             right: 1rem;
             line-height: 1;
             color: var(--text-light);
+        }
+        
+        .reveal-indicator {
+            position: absolute;
+            top: 1rem;
+            left: 2rem;
+            display: flex;
+            align-items: center;
+            font-size: 0.9rem;
+            color: var(--neon-accent);
+            opacity: 0;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+        }
+        
+        .project-card-new:hover .reveal-indicator {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        
+        .tech-stack {
+            margin-top: 1rem;
         }
         
         /* Modal Styles */
@@ -392,12 +425,24 @@
                 padding: 1.5rem;
             }
             
-            .project-card {
-                height: 320px;
+            .project-card-new {
+                height: 320px !important;
             }
             
-            .project-front, .project-back {
+            .project-header, .project-features {
                 padding: 1.5rem;
+            }
+            
+            .project-card-new:hover .project-header {
+                transform: translateY(-75%);
+            }
+            
+            .project-features {
+                height: 75%;
+            }
+            
+            .project-number {
+                font-size: 3rem;
             }
         }
     </style>
@@ -554,7 +599,7 @@
         </div>
     </section>
 
-    <!-- Skills Section - UPDATED WITH HTML & CSS -->
+    <!-- Skills Section -->
     <section id="skills" class="container py-5">
         <div class="row fade-in">
             <div class="col-12 text-center mb-5">
@@ -564,7 +609,7 @@
         </div>
         
         <div class="row g-4">
-            <!-- Web Development - UPDATED -->
+            <!-- Web Development -->
             <div class="col-md-4">
                 <div class="glass-card h-100 neon-border">
                     <div class="d-flex align-items-center mb-4">
@@ -600,8 +645,17 @@
                             <div class="skill-progress" data-width="90"></div>
                         </div>
                     </div>
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span class="text-unmuted">Node.js & PHP</span>
+                            <span class="text-unmuted">85%</span>
+                        </div>
+                        <div class="skill-bar">
+                            <div class="skill-progress" data-width="85"></div>
+                        </div>
+                    </div>
                     <div class="mt-4">
-                        <small class="text-unmuted">HTML5 • CSS3 • Bootstrap • TailwindCSS • MongoDB • SQL</small>
+                        <small class="text-unmuted">HTML5 • CSS3 • JavaScript • TypeScript • React • Next.js • Node.js • PHP • MongoDB • MySQL • Bootstrap • TailwindCSS</small>
                     </div>
                 </div>
             </div>
@@ -692,7 +746,7 @@
         </div>
     </section>
 
-    <!-- Portfolio Section - UPDATED WITH BACK OF CARDS -->
+    <!-- Portfolio Section - NEW DESIGN with Slide-Up Reveal -->
     <section id="portfolio" class="container py-5">
         <div class="row fade-in">
             <div class="col-12 text-center mb-5">
@@ -702,92 +756,100 @@
         </div>
         
         <div class="row g-4">
-            <!-- Project 1: Blockchain Arbitrage - UPDATED -->
+            <!-- Project 1: Blockchain Arbitrage - NEW DESIGN -->
             <div class="col-md-6 col-lg-4">
-                <div class="project-card">
-                    <div class="project-inner">
-                        <div class="project-front" style="background: linear-gradient(135deg, #1a202c, #2d3748);">
-                            <div class="project-number">01</div>
-                            <h3 class="mb-3">Blockchain Arbitrage System</h3>
-                            <p class="small text-unmuted">
-                                Triangular arbitrage & DEX-to-DEX flash loan automation
-                            </p>
-                            <div class="mt-auto">
-                                <span class="tech-badge blockchain-badge">Solidity</span>
-                                <span class="tech-badge automation-badge">Flash Loans</span>
-                            </div>
+                <div class="project-card-new" style="height: 350px;">
+                    <div class="project-header" style="background: linear-gradient(135deg, #1a202c, #2d3748);">
+                        <div class="project-number">01</div>
+                        <h3 class="mb-2">Blockchain Arbitrage System</h3>
+                        <p class="small text-unmuted">
+                            Triangular arbitrage & DEX-to-DEX flash loan automation
+                        </p>
+                        <div class="tech-stack">
+                            <span class="tech-badge blockchain-badge">Solidity</span>
+                            <span class="tech-badge automation-badge">Flash Loans</span>
                         </div>
-                        <div class="project-back">
+                        <div class="reveal-indicator">
+                            <i class="fas fa-chevron-down"></i>
+                            <span class="ms-2">View Features</span>
+                        </div>
+                    </div>
+                    <div class="project-features">
+                        <div class="features-content">
                             <h4 class="mb-3">Features</h4>
-                            <ul class="small mb-4 text-unmuted">
+                            <ul class="small text-unmuted mb-4" style="padding-left: 1.2rem;">
                                 <li class="mb-2">Real-time profit detection across multiple DEXs</li>
                                 <li class="mb-2">Autonomous execution via flash loans</li>
                                 <li class="mb-2">Multi-chain EVM support (Ethereum, BSC, Polygon)</li>
                                 <li class="mb-2">Gas optimization for cost-efficient arbitrage</li>
                                 <li class="mb-2">Security-optimized architecture with fail-safes</li>
                             </ul>
-                            <div class="mt-auto">
-                                <button class="btn btn-sm btn-outline-light w-100" onclick="showContractCode()">
-                                    View Source Code
-                                </button>
-                            </div>
+                            <button class="btn btn-sm btn-outline-light w-100" onclick="showContractCode()">
+                                View Source Code
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <!-- Project 2: E-commerce Platform - UPDATED -->
+            <!-- Project 2: E-commerce Platform - NEW DESIGN -->
             <div class="col-md-6 col-lg-4">
-                <div class="project-card">
-                    <div class="project-inner">
-                        <div class="project-front" style="background: linear-gradient(135deg, #1e3a8a, #3b82f6);">
-                            <div class="project-number">02</div>
-                            <h3 class="mb-3">Multi-Vendor E-commerce</h3>
-                            <p class="small text-unmuted">
-                                Full store builder with WhatsApp integration
-                            </p>
-                            <div class="mt-auto">
-                                <span class="tech-badge web-badge">Next.js</span>
-                                <span class="tech-badge automation-badge">WhatsApp API</span>
-                            </div>
+                <div class="project-card-new" style="height: 350px;">
+                    <div class="project-header" style="background: linear-gradient(135deg, #1e3a8a, #3b82f6);">
+                        <div class="project-number">02</div>
+                        <h3 class="mb-2">Multi-Vendor E-commerce</h3>
+                        <p class="small text-unmuted">
+                            Full store builder with WhatsApp integration
+                        </p>
+                        <div class="tech-stack">
+                            <span class="tech-badge web-badge">Next.js</span>
+                            <span class="tech-badge automation-badge">WhatsApp API</span>
                         </div>
-                        <div class="project-back">
+                        <div class="reveal-indicator">
+                            <i class="fas fa-chevron-down"></i>
+                            <span class="ms-2">View Features</span>
+                        </div>
+                    </div>
+                    <div class="project-features">
+                        <div class="features-content">
                             <h4 class="mb-3">Features</h4>
-                            <ul class="small mb-4 text-unmuted">
+                            <ul class="small text-unmuted mb-4" style="padding-left: 1.2rem;">
                                 <li class="mb-2">Custom branded merchant URLs</li>
                                 <li class="mb-2">Real-time analytics dashboard with sales tracking</li>
                                 <li class="mb-2">Automated WhatsApp order processing</li>
                                 <li class="mb-2">Multi-channel notifications (SMS, Email, WhatsApp)</li>
                                 <li class="mb-2">Inventory management system</li>
                             </ul>
-                            <div class="mt-auto">
-                                <button class="btn btn-sm btn-outline-light w-100" onclick="showDemoVideo()">
-                                    View Demo
-                                </button>
-                            </div>
+                            <button class="btn btn-sm btn-outline-light w-100" onclick="showDemoVideo()">
+                                View Demo
+                            </button>
                         </div>
                     </div>
                 </div>
             </div>
             
-            <!-- Project 3: Trading Bot - UPDATED -->
+            <!-- Project 3: Trading Bot - NEW DESIGN -->
             <div class="col-md-6 col-lg-4">
-                <div class="project-card">
-                    <div class="project-inner">
-                        <div class="project-front" style="background: linear-gradient(135deg, #065f46, #10b981);">
-                            <div class="project-number">03</div>
-                            <h3 class="mb-3">Trading Intelligence Bot</h3>
-                            <p class="small text-unmuted">
-                                Telegram-based arbitrage & liquidation alerts
-                            </p>
-                            <div class="mt-auto">
-                                <span class="tech-badge automation-badge">Telegram Bot</span>
-                                <span class="tech-badge blockchain-badge">Web3</span>
-                            </div>
+                <div class="project-card-new" style="height: 350px;">
+                    <div class="project-header" style="background: linear-gradient(135deg, #065f46, #10b981);">
+                        <div class="project-number">03</div>
+                        <h3 class="mb-2">Trading Intelligence Bot</h3>
+                        <p class="small text-unmuted">
+                            Telegram-based arbitrage & liquidation alerts
+                        </p>
+                        <div class="tech-stack">
+                            <span class="tech-badge automation-badge">Telegram Bot</span>
+                            <span class="tech-badge blockchain-badge">Web3</span>
                         </div>
-                        <div class="project-back">
+                        <div class="reveal-indicator">
+                            <i class="fas fa-chevron-down"></i>
+                            <span class="ms-2">View Features</span>
+                        </div>
+                    </div>
+                    <div class="project-features">
+                        <div class="features-content">
                             <h4 class="mb-3">Features</h4>
-                            <ul class="small mb-4 text-unmuted">
+                            <ul class="small text-unmuted mb-4" style="padding-left: 1.2rem;">
                                 <li class="mb-2">Real-time market monitoring across 10+ exchanges</li>
                                 <li class="mb-2">Automated trade execution with risk management</li>
                                 <li class="mb-2">Portfolio tracking with performance analytics</li>
@@ -795,6 +857,7 @@
                                 <li class="mb-2">Customizable alert thresholds and strategies</li>
                                 <li class="mb-2">Historical data analysis for pattern recognition</li>
                             </ul>
+                            <!-- No button for this project -->
                         </div>
                     </div>
                 </div>
@@ -971,6 +1034,32 @@
                 publicKey: "bLxGnUQqM7e6ij8yo"
             });
             console.log('EmailJS initialized');
+        });
+
+        // Enhanced project card interactions
+        document.addEventListener('DOMContentLoaded', function() {
+            const projectCards = document.querySelectorAll('.project-card-new');
+            
+            projectCards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.zIndex = '10';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    setTimeout(() => {
+                        this.style.zIndex = '1';
+                    }, 500);
+                });
+            });
+            
+            // Add click functionality for mobile
+            projectCards.forEach(card => {
+                card.addEventListener('click', function(e) {
+                    if (window.innerWidth <= 768) {
+                        this.classList.toggle('active');
+                    }
+                });
+            });
         });
 
         // Scroll animations
